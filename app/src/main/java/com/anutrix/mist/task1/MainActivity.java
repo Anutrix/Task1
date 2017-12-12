@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
             button7 , button8 , button9 , buttonAdd , buttonSub , buttonDivision ,
             buttonMul , button10 , buttonC , buttonEqual ;
 
-    EditText edt1 ;
+    TextView edt1 ;
 
     float mValueOne , mValueTwo ;
 
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         buttonDivision = (Button) findViewById(R.id.buttonDiv);
         buttonC = (Button) findViewById(R.id.buttonC);
         buttonEqual = (Button) findViewById(R.id.buttonEqual);
-        edt1 = (EditText) findViewById(R.id.edt1);
+        edt1 = (TextView) findViewById(R.id.edt1);
 
 
         button1.setOnClickListener(new View.OnClickListener() {
@@ -117,12 +118,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (edt1 == null) {
-                    edt1.setText("");
-                } else {
+                if (edt1 == null){
+                    //edt1.setText("");
+                }else {
                     mValueOne = Float.parseFloat(edt1.getText() + "");
                     mAddition = true;
-                    edt1.setText(null);
+                    edt1.setText("");
                 }
             }
         });
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mValueOne = Float.parseFloat(edt1.getText() + "");
                 mSubtract = true ;
-                edt1.setText(null);
+                edt1.setText("");
             }
         });
 
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mValueOne = Float.parseFloat(edt1.getText() + "");
                 mMultiplication = true ;
-                edt1.setText(null);
+                edt1.setText("");
             }
         });
 
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mValueOne = Float.parseFloat(edt1.getText()+"");
                 mDivision = true ;
-                edt1.setText(null);
+                edt1.setText("");
             }
         });
 
@@ -159,24 +160,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mValueTwo = Float.parseFloat(edt1.getText() + "");
 
-                if (mAddition == true){
+                if (mAddition){
 
                     edt1.setText(mValueOne + mValueTwo +"");
                     mAddition=false;
                 }
 
 
-                if (mSubtract == true){
+                if (mSubtract){
                     edt1.setText(mValueOne - mValueTwo+"");
                     mSubtract=false;
                 }
 
-                if (mMultiplication == true){
+                if (mMultiplication){
                     edt1.setText(mValueOne * mValueTwo+"");
                     mMultiplication=false;
                 }
 
-                if (mDivision == true){
+                if (mDivision){
                     edt1.setText(mValueOne / mValueTwo+"");
                     mDivision=false;
                 }

@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     tools:context="com.anutrix.mist.task1.MainActivity">
 
-    <EditText
+    <TextView
         android:id="@+id/edt1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="128dp"
         android:inputType=""
         android:labelFor="@+id/edt1"
         android:text=""
