@@ -8,15 +8,31 @@
     tools:context="com.anutrix.mist.task1.MainActivity">
 
     <TextView
-        android:id="@+id/edt1"
+        android:id="@+id/edt"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="8dp"
         android:inputType=""
         android:labelFor="@+id/edt1"
         android:text=""
+        android:textSize="36sp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/edt1"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginTop="8dp"
+        android:inputType=""
+        android:labelFor="@+id/edt1"
+        android:text=""
+        android:textSize="36sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt" />
 
     <Button
         android:id="@+id/button1"

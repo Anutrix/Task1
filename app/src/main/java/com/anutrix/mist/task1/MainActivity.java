@@ -13,11 +13,89 @@ public class MainActivity extends AppCompatActivity {
             button7 , button8 , button9 , buttonAdd , buttonSub , buttonDivision ,
             buttonMul , button10 , buttonC , buttonEqual ;
 
-    TextView edt1 ;
+    TextView edt,edt1 ;
 
-    float mValueOne , mValueTwo ;
+    String expression;
 
-    boolean mAddition , mSubtract ,mMultiplication ,mDivision ;
+    public static double eval(final String str){
+        return new Object() {
+            int pos = -1, ch;
+
+            void nextChar() {
+                ch = (++pos < str.length()) ? str.charAt(pos) : -1;
+            }
+
+            boolean eat(int charToEat) {
+                while (ch == ' ') nextChar();
+                if (ch == charToEat) {
+                    nextChar();
+                    return true;
+                }
+                return false;
+            }
+
+            double parse() {
+                nextChar();
+                double x = parseExpression();
+                if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char)ch);
+                return x;
+            }
+
+            // Grammar:
+            // expression = term | expression `+` term | expression `-` term
+            // term = factor | term `*` factor | term `/` factor
+            // factor = `+` factor | `-` factor | `(` expression `)`
+            //        | number | functionName factor | factor `^` factor
+
+            double parseExpression() {
+                double x = parseTerm();
+                for (;;) {
+                    if      (eat('+')) x += parseTerm(); // addition
+                    else if (eat('-')) x -= parseTerm(); // subtraction
+                    else return x;
+                }
+            }
+
+            double parseTerm() {
+                double x = parseFactor();
+                for (;;) {
+                    if      (eat('*')) x *= parseFactor(); // multiplication
+                    else if (eat('/')) x /= parseFactor(); // division
+                    else return x;
+                }
+            }
+
+            double parseFactor() {
+                if (eat('+')) return parseFactor(); // unary plus
+                if (eat('-')) return -parseFactor(); // unary minus
+
+                double x;
+                int startPos = this.pos;
+                if (eat('(')) { // parentheses
+                    x = parseExpression();
+                    eat(')');
+                } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
+                    while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
+                    x = Double.parseDouble(str.substring(startPos, this.pos));
+                } else if (ch >= 'a' && ch <= 'z') { // functions
+                    while (ch >= 'a' && ch <= 'z') nextChar();
+                    String func = str.substring(startPos, this.pos);
+                    x = parseFactor();
+                    if (func.equals("sqrt")) x = Math.sqrt(x);
+                    else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
+                    else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
+                    else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
+                    else throw new RuntimeException("Unknown function: " + func);
+                } else {
+                    throw new RuntimeException("Unexpected: " + (char)ch);
+                }
+
+                if (eat('^')) x = Math.pow(x, parseFactor()); // exponentiation
+
+                return x;
+            }
+        }.parse();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         buttonDivision = (Button) findViewById(R.id.buttonDiv);
         buttonC = (Button) findViewById(R.id.buttonC);
         buttonEqual = (Button) findViewById(R.id.buttonEqual);
+        edt = (TextView) findViewById(R.id.edt);
         edt1 = (TextView) findViewById(R.id.edt1);
 
 
@@ -117,70 +196,37 @@ public class MainActivity extends AppCompatActivity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (edt1 == null){
-                    //edt1.setText("");
-                }else {
-                    mValueOne = Float.parseFloat(edt1.getText() + "");
-                    mAddition = true;
-                    edt1.setText("");
-                }
+                edt1.setText(edt1.getText()+"+");
             }
         });
 
         buttonSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mValueOne = Float.parseFloat(edt1.getText() + "");
-                mSubtract = true ;
-                edt1.setText("");
+                edt1.setText(edt1.getText()+"-");
             }
         });
 
         buttonMul.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mValueOne = Float.parseFloat(edt1.getText() + "");
-                mMultiplication = true ;
-                edt1.setText("");
+                edt1.setText(edt1.getText()+"*");
             }
         });
 
         buttonDivision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mValueOne = Float.parseFloat(edt1.getText()+"");
-                mDivision = true ;
-                edt1.setText("");
+                edt1.setText(edt1.getText()+"/");
             }
         });
 
         buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mValueTwo = Float.parseFloat(edt1.getText() + "");
-
-                if (mAddition){
-
-                    edt1.setText(mValueOne + mValueTwo +"");
-                    mAddition=false;
-                }
-
-
-                if (mSubtract){
-                    edt1.setText(mValueOne - mValueTwo+"");
-                    mSubtract=false;
-                }
-
-                if (mMultiplication){
-                    edt1.setText(mValueOne * mValueTwo+"");
-                    mMultiplication=false;
-                }
-
-                if (mDivision){
-                    edt1.setText(mValueOne / mValueTwo+"");
-                    mDivision=false;
-                }
+                expression=edt1.getText() + "";
+                edt.setText(expression);
+                edt1.setText(String.valueOf(eval(expression)));
             }
         });
 
